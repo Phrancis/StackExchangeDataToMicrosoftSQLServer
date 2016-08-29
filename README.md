@@ -9,7 +9,7 @@ The following steps are prerequisites to performing any of the steps detailed in
 
 ##1.1 Download the data dump
 
-Browse to [Stack Exchange Data Dump](https://archive.org/details/stackexchange) on archive.org. This will require a torrent client (search Google if you don't have one already, they are easy to find). 
+Browse to [Stack Exchange Data Dump](https://archive.org/details/stackexchange) on archive.org. This will require a torrent client (search the internet if you don't have one already, they are easy to find). 
 
 _Note that while torrents have had a reputation for being a vehicle to download files illegally, you can rest assured that this torrent is completely legal, approved and provided by Stack Exchange, and free of viruses or other threats._
 
@@ -79,7 +79,9 @@ There is an additional, manual step that needs to be performed in order for Stac
 
 ##2.3 Split very large XML files
 
-SQL Server has a maximum XML field size of 2147483647 bytes (2^31-1) or 4 gigabyte (GiB). This will work just fine for the majority of XML files, however, some of the files for Stack Overflow exceed this size and if you wish to load that data, the XML files will need to be "split" into smaller files < 4 GiB each. Following are instructions on how to split such files, if you wish to load them.
+__IMPORTANT: These steps are only needed if data from very large sites (i.e., Stack Overflow) is to be loaded into your database. If you do not plan on loading this data, you may skip this step entirely.__
+
+SQL Server has a maximum XML field size of 2147483647 bytes (2^3g1-1) or 4 gigabytes (GiB). This will work just fine for the majority of XML files, however, some of the files for Stack Overflow exceed this size and if you wish to load that data, the XML files will need to be "split" into smaller files < 4 GiB each. Following are instructions on how to split such files, if you wish to load them.
 
 ###2.3.1 Find the files that are too large
 
@@ -108,6 +110,8 @@ To find how many files each of the files will need split into, simply divide the
 - PostHistory.xml : 71927132845 / 2147483647 = 33.4 (34 to be safe)
 - Posts.xml : 44071695285 / 2147483647 = 20.5 (21 to be safe)
 
+###2.3.3 Split the files
+
 To effectively split the files manually, you will need an advanced text editor such as [Notepad++](https://notepad-plus-plus.org/) or [Sublime Text](https://www.sublimetext.com/). (the author uses Sublime Text).
 
 Open the XML file you would like to split in the text editor. Note that this can take a long time to load for very large files. Once the file is loaded, the first two lines should look like this:
@@ -132,6 +136,22 @@ From the large source file, copy the first 500,000 lines, then paste these into 
 ```xml
 <row Id="1" PostTypeId="1" AcceptedAnswerId="3" CreationDate="2011-04-26T19:37:32.613" Score="5" ViewCount="76" Body="some content here" OwnerUserId="51" LastEditorUserId="297" LastEditDate="2011-05-08T19:53:20.583" LastActivityDate="2011-05-08T19:53:20.583" Title="some title here" Tags="&lt;support&gt;" AnswerCount="2" CommentCount="1" />
 ```
+
+To summarize, each of the files will need to be structured as in this example:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<posts>
+	<row Id="1" ......... />
+	<row Id="2" ......... />
+	<row Id="3" ......... />
+	
+	..........
+	
+	<row Id="500000" ......... />
+</posts>
+```
+
 
 Save the file into the same folder as the source, and name it `Posts1.xml`, or `PostHistory1.xml`, depending on the name of the source file. Continue doing this until all the lines from the source file are copied into separate numbered files, e.g., `Posts1.xml, Posts2.xml, ... Posts21.xml`. Once this is complete, you may delete the source file and keep only the numbered split files.
 
