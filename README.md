@@ -60,6 +60,8 @@ for /R %sourcedir% %%I in ("*.7z") do (
 
 Save it locally with an extension of `.cmd`, for example, `C:\Scripts\BatchUnzipStackExchange.cmd`. Once it is saved, you can execute it from the Windows command prompt by typing only the full path of the script, e.g.: `C:\Scripts\BatchUnzipStackExchange.cmd` and pressing enter.
 
+<img src="https://i.imgur.com/M3DJBjG.png" />
+
 The script will begin processing all of the files one by one. The entire process will likely take 2-3 hours to complete. Once it is completed, your directory should look like this:
 
 <img src="https://i.imgur.com/ABfVyry.png" />
