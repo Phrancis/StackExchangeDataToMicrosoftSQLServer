@@ -2,7 +2,7 @@
 1.1-Create_StackExchange_Database.sql
 This script is optional, but recommended, if you wish to keep the Stack Exchange data dump in its own namespace on the database server. 
 This script requires the `CREATE DATABASE` administrative permission level.
-The default database name is set to `StackExchangeDataDump` but you may change it to whatever name you wish (see below).
+The default database name is set to `SE` but you may change it to whatever name you wish (see below).
 *********************/
 
 USE [master]
@@ -11,7 +11,7 @@ GO
 /****** Object:  Database [SE]    Script Date: 2016-08-29 18:07:25 ******/
 
 -- README: Change this line if you wish to create a database with a different name:
-CREATE DATABASE StackExchangeDataDump
+CREATE DATABASE [SE]
 
  CONTAINMENT = NONE
 
