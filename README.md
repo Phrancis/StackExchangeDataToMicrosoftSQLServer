@@ -1,5 +1,7 @@
-# StackExchangeDataToSQLServer
-A step-by-step guide to process and load the public Stack Exchange data dump into a SQL Server relational database.
+# StackExchangeDataToMicrosoftSQLServer
+A step-by-step guide to process and load the public Stack Exchange data dump into a Microsoft SQL Server relational database.
+
+Note that this will not work as-is with other database systems such as MySQL, Oracle, SQLite, PostgreSQL or DB2.
 
 ---
 
@@ -35,7 +37,11 @@ Once the files are extracted, you may delete the downloaded archive file, at you
 
 ##2.2 Unarchive the zip files
 
-Each of the zip files contain a number of XML data files representing the different types of data included (more on that later). Each zip file must be extracted into a directory of the same name. This is extremely tedious to do manually, thus you may use the following batch file (Windows only) to create folders and process all the files automatically.
+Each of the zip files contain a number of XML data files representing the different types of data included (more on that later). Each zip file must be extracted into a directory of the same name. This is extremely tedious to do manually, thus below are some scripts to make it easier if you wish to extract multiple sites' data.
+
+###2.2.a Using Windows operating system
+
+You may use the following batch file (Windows only) to create folders and process all the files automatically.
 
 _This batch script is adapted from [a Stack Overflow answer](http://stackoverflow.com/a/17082572/3626537)._
 
@@ -62,11 +68,17 @@ Save it locally with an extension of `.cmd`, for example, `C:\Scripts\BatchUnzip
 
 <img src="https://i.imgur.com/M3DJBjG.png" />
 
+###2.2.b Using *NIX operating system
+
+_To be added later._
+
+##2.3 Processing and verifying
+
 The script will begin processing all of the files one by one. The entire process will likely take 2-3 hours to complete. Once it is completed, your directory should look like this:
 
 <img src="https://i.imgur.com/ABfVyry.png" />
 
-__IMPORTANT!__
+##2.4 Stack Overflow files
 
 There is an additional, manual step that needs to be performed in order for Stack Overflow data to be in the proper folder. The data dump has separate zip files for each of the Stack Overflow XML files, unlike all the other sites. The following steps need to be done in the directory where the zip files were extracted:
 
@@ -85,7 +97,12 @@ SQL Server has a maximum XML field size of 2147483647 bytes (2^3g1-1) or 4 gigab
 
 ###2.3.1 Find the files that are too large
 
-As of June 13 2016 data dump, only 2 files exceed the 4 GiB size limit. Those are `stackoverflow.com\Posts.xml` and `stackoverflow.com\PostHistory.xml`. You can find the files that exceed the size using Windows PowerShell. Open the PowerShell console (Start Menu -> Search -> PowerShell) then paste in (right-click in console) the following command (from [Stack Overflow](http://stackoverflow.com/a/3423144/3626537)), editing the `-path` value to the path where your folders are:
+
+As of June 13 2016 data dump, only 2 files exceed the 4 GiB size limit. Those are `stackoverflow.com\Posts.xml` and `stackoverflow.com\PostHistory.xml`. 
+
+####2.3.1.a Using Windows operating system
+
+You can find the files that exceed the size using Windows PowerShell. Open the PowerShell console (Start Menu -> Search -> PowerShell) then paste in (right-click in console) the following command (from [Stack Overflow](http://stackoverflow.com/a/3423144/3626537)), editing the `-path` value to the path where your folders are:
 
 ```powershell
 Get-ChildItem -path D:\StackExchangeData -recurse | where { ($_.Length / 4000MB) -gt 10 }
@@ -102,6 +119,10 @@ Mode                LastWriteTime         Length Name
 -a----       2016-03-07     16:52    71927132845 PostHistory.xml
 -a----       2016-03-07     17:14    44071695285 Posts.xml
 ```
+
+####2.3.1.b Using *NIX operating system
+
+_To be added later._
 
 ###2.3.2 Find how many files to split into
 
