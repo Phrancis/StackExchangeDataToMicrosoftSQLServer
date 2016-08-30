@@ -70,7 +70,6 @@ BEGIN
         + 'CONVERT(XML, BulkColumn) AS BulkColumn' + CHAR(10)
         + 'FROM OPENROWSET(BULK ' + QUOTENAME(@FilePath, '''') + ', SINGLE_BLOB) AS x;'
 
-    --PRINT @SQL_OpenRowSet
     EXECUTE sp_executesql @SQL_OpenRowSet;
 
     FETCH NEXT FROM _SitesToProcess 

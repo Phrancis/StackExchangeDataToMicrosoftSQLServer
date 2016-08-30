@@ -12,6 +12,9 @@ Instructions
 3. Verify the displayed results, which will be displayed from newest to oldest Badge awarded date (i.e.: `CreationDate` column)
 */
 
+USE SE
+GO
+
 /*
 Set @DeleteXmlRawDataAfterProcessing to 0 or 1 before executing the script to tell it whether to delete the RawXmlData entries for badges after processing, 
 in order to free up space in the database.
