@@ -44,3 +44,7 @@ This should populate columns `A` to `AB` with site data. We will use a formula t
 8. Select the black square on the lower-right corner of cell `AC2`, and drag it down the column to the very last row of data; this will apply its formula to the whole column.
 9. Select the entire `AC` column, copy it, then go to the SQL script and paste it below the line indicated. 
 10. Remove the very last comma at the end of the last line (otherwise you will get an error)
+
+You can then execute the script. After it is done, it will display a table like this where you can see the added data:
+
+<img src="https://i.imgur.com/wD7zTwd.png" />
