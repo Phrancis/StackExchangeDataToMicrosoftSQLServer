@@ -31,12 +31,12 @@ IF OBJECT_ID('CleanData.Badges') IS NOT NULL
 GO
 -- Create the table
 CREATE TABLE CleanData.Badges (
-    SiteId UNIQUEIDENTIFIER PRIMARY KEY,
+    SiteId UNIQUEIDENTIFIER NOT NULL,
     ApiSiteParameter NVARCHAR(256) NOT NULL,
     RowId INT,
     UserId INT,
     Name NVARCHAR(256),
-    [Date] DATETIME2,
+    CreationDate DATETIME2,
     Class INT,
     TagBased BIT,
     Inserted DATETIME2 DEFAULT GETDATE(),

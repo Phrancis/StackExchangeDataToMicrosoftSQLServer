@@ -38,6 +38,8 @@ Instructions
 
 Badges are awarded to users when they complete a certain activity or reach a certain milestone. The conditions vary for each Stack Exchange site. Click the __Badges__ link at the top of any Stack Exchange site for specific details.
 
+If you wish to load Badges data into the database, perform the following steps.
+
 ###1.1-Create__Badges_Tables.sql
 
 1. Change database name if needed
@@ -53,3 +55,5 @@ Instructions
 1. Run script as-is
 2. Verify the output data
 3. If output data is incorrect, verify the parameter values in `RawDataXml.Globals` and the contents of each target folder to confirm a `Badges.xml` file exists.
+
+###1.3-Parse_RawDataXml_Badges_To_CleanData.sql

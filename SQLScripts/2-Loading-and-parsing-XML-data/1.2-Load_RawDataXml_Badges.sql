@@ -16,15 +16,8 @@ GO
 --DECLARE @SourcePath NVARCHAR(256) = 'D:\StackExchangeData'
 
 -- Fetch global parameter values:
-DECLARE @SourcePath NVARCHAR(256) = (SELECT Value FROM RawDataXml.Globals WHERE Parameter = 'SourcePath')
-DECLARE @SiteFolders TABLE (FolderName NVARCHAR(256))
-INSERT INTO @SiteFolders(FolderName) 
-SELECT Value FROM RawDataXml.Globals
-WHERE Parameter = 'TargetSite'
-
--- Fetch the SiteId and ApiSiteParameter values for the target sites:
+DECLARE @SourcePath NVARCHAR(256) = (SELECT Value FROM RawDataXml.Globals WHERE Parameter = 'SourcePath');
 DECLARE @SiteReference TABLE (
-    RowNum INT IDENTITY(1,1),
     SiteId UNIQUEIDENTIFIER,
     ApiSiteParameter NVARCHAR(256),
     SiteDirectory NVARCHAR(256)
@@ -36,7 +29,8 @@ SELECT
     SiteDirectory
 FROM CleanData.Sites
 WHERE SiteDirectory IN (
-    SELECT FolderName FROM @SiteFolders
+    SELECT Value FROM RawDataXml.Globals
+    WHERE Parameter = 'TargetSite'
 );
 
 -- Delete any previous data that may be present for the sites:
@@ -57,8 +51,7 @@ DECLARE _SitesToProcess CURSOR FOR
         SiteId, 
         ApiSiteParameter, 
         SiteDirectory 
-    FROM @SiteReference
-    ORDER BY RowNum ASC;
+    FROM @SiteReference;
 
 OPEN _SitesToProcess;
 FETCH NEXT FROM _SitesToProcess 

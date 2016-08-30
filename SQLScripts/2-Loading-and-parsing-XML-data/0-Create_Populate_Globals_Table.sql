@@ -18,8 +18,8 @@ DECLARE @SourcePath NVARCHAR(256)
 DECLARE @TargetSites TABLE (RowNum INT IDENTITY(1,1), FolderName NVARCHAR(256))
 
 -- README: Edit this to the root folder where you extracted all the site sub-folders:
---SET @SourcePath = 'D:\StackExchangeData'
-SET @SourcePath = 'D:\Downloads\stackexchange\'
+SET @SourcePath = 'D:\StackExchangeData'
+
 /*
 README:
 Add/edit entries with the name of each folder for the site(s) you wish to load data for.
