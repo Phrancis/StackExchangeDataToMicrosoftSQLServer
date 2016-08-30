@@ -1,12 +1,10 @@
-USE SE
-GO
-
-/****** Object:  Table CleanData.Sites    Script Date: 2016-08-29 18:43:58 ******/
 /*
 1.3.a-Create_CleanData_Sites_Table.sql
 This table will contain basic data about all sites on the Stack Exchange network which will be used frequently in the data dump database.
 This script creates the table in the `CleanData` schema.
 */
+USE [SE]
+GO
 
 SET ANSI_NULLS ON
 GO

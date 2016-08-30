@@ -1,10 +1,10 @@
 #1. Preparing the database
 
-The following sections will refer to individual scripts within this folder. Follow the instructions closely.
+The following sections will refer to individual scripts within this folder. __Follow these instructions closely.__
 
 ##1.1-Create_StackExchange_Database.sql
 
-__IMPORTANT:__ This script is provided as a workaround, but if you have SQL Server Management Service (SSMS) client, which is included with all Microsoft SQL Server installations, you may do this more easily from the user interface. User the script if you do not have access or do not wish to use the interface.
+__IMPORTANT:__ This script is provided as a workaround, but if you have SQL Server Management Studio (SSMS) client, which is included with all Microsoft SQL Server installations, you may do this more easily from the user interface. User the script if you do not have access or do not wish to use the interface.
 
 See: [Create a Database](https://msdn.microsoft.com/en-us/library/ms186312.aspx) from Microsoft Developer Network (MSDN).
 
@@ -14,6 +14,11 @@ This script is optional, but recommended, if you wish to keep the Stack Exchange
 
 A schema is a division of the database where related entities and data are grouped together for organization. We will use 2 schemas, one for loading the raw XML data from the data dump, and the other for the clean data that we will parse from the XML.
 
+<u>Instructions</u>
+
+- If you used a database name other than `SE` in __1.1__, edit as indicated.
+- Execute the script.
+
 ##1.3 Sites table
 
 This table will contain basic data about all sites on the Stack Exchange network which will be used frequently in the data dump database.
@@ -22,17 +27,26 @@ This table will contain basic data about all sites on the Stack Exchange network
 
 This script creates the table in the `CleanData` schema.
 
+<u>Instructions</u>
+
+- If you used a database name other than `SE` in __1.1__, edit as indicated.
+- Execute the script.
+
 ###1.3.b-Populate_CleanData_Sites_Table.sql
 
 This script has some special instructions to perform prior to executing in order to fetch the most current site data from the Stack Exchange network.
 
+<u>Instructions (Part 1)</u>
+
 1. Open this link: [StackExchange Stats Explorer raw sites data (CSV)](http://sese.evbpc.com/API/1.0/Sites.ashx?FileType=csv)
-2. Copy the entire content of the page, and paste it into a text editor/Notepad
-3. Save the file on your computer with a `.csv` extension
+2. Copy the entire contents of the page, and paste it into a text editor like notepad
+3. Save the file to your computer with a `.csv` extension, e.g. `StackExchangeSites.csv`
 4. Using a spreadsheet application such as Microsoft Excel or OpenOffice.org Calc, open the `.csv` file
 5. In the next dialog, set the delimiter to "Comma" and select OK.
 
 This should populate columns `A` to `AB` with site data. We will use a formula to create a statement that we will then copy and paste into our SQL script.
+
+<u>Instructions (Part 2)</u>
 
 1. Find the column immediately after the last column of data (should be column `AC` normally)
 2. Go to the 1st row in that column, e.g.: cell `AC1`
@@ -44,7 +58,8 @@ This should populate columns `A` to `AB` with site data. We will use a formula t
 8. Select the black square on the lower-right corner of cell `AC2`, and drag it down the column to the very last row of data; this will apply its formula to the whole column.
 9. Select the entire `AC` column, copy it, then go to the SQL script and paste it below the line indicated. 
 10. Remove the very last comma at the end of the last line (otherwise you will get an error)
+11. Execute the script.
 
-You can then execute the script. After it is done, it will display a table like this where you can see the added data:
+After it is done, it will display a table like this where you can see the added data. The `SiteDirectory` column to the right should match the folder names where your XML data is.
 
 <img src="https://i.imgur.com/wD7zTwd.png" />
