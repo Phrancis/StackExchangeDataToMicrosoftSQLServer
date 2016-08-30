@@ -57,3 +57,11 @@ Instructions
 3. If output data is incorrect, verify the parameter values in `RawDataXml.Globals` and the contents of each target folder to confirm a `Badges.xml` file exists.
 
 ###1.3-Parse_RawDataXml_Badges_To_CleanData.sql
+
+This script will parse the raw XML data and organize it into the `CleanData.Badges` table. It will provide the option of deleting the data in `RawDataXml.Badges` after finishing to free up storage space in the database.
+
+Instructions
+
+1. Set `@DeleteXmlRawDataAfterProcessing` to `0` (false/no) or `1` (true/yes). If set to `1`, you will have to reprocess the script `1.2-Load_RawDataXml_Badges.sql` prior to executing this script again.
+2. Execute the script (execution may take several minutes depending on the amount of XML data to process)
+3. Verify the displayed results, which will be displayed from newest to oldest Badge awarded date (i.e.: `CreationDate` column)
