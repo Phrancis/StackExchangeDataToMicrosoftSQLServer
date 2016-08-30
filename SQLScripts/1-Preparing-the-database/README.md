@@ -63,3 +63,9 @@ This should populate columns `A` to `AB` with site data. We will use a formula t
 After it is done, it will display a table like this where you can see the added data. The `SiteDirectory` column to the right should match the folder names where your XML data is.
 
 <img src="https://i.imgur.com/wD7zTwd.png" />
+
+---
+
+#2. Loading and parsing XML data
+
+Proceed to the folder called `2-Loading-and-parsing-XML-data` for further instructions.

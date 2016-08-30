@@ -23,7 +23,7 @@ You will need access to both a Microsoft SQL Server __client__ as well as __data
 
 In case you wish to use an external server, you will need to make sure that you have elevated administrative privileges on your target database, up to and including `CREATE SCHEMA` privileges, or that you can have an administrator of that database do so for you. Each SQL script will indicate the privileges needed to execute them.
 
-In case you are not using a Windows computer, there are certain clients/IDEs which can allow you to connect to and use a Microsoft SQL Server database. One such IDE is [DataGri[](https://www.jetbrains.com/datagrip/) by JetBrains.
+In case you are not using a Windows computer, there are certain clients/IDEs which can allow you to connect to and use a Microsoft SQL Server database. One such IDE is [DataGrip](https://www.jetbrains.com/datagrip/) by JetBrains.
 
 Make sure to correctly install and test SQL Server before attempting to execute the scripts included in this repository. Basic knowledge of SQL is recommended, but not required.
 
