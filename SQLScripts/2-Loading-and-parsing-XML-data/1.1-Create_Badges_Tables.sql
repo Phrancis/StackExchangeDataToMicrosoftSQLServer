@@ -3,7 +3,7 @@
 
 1. Change database name if needed
 2. Execute script
-3. Table data will be shown after completion
+3. Tables will be shown after completion
 */
 
 -- Change database name if needed:
@@ -18,7 +18,27 @@ GO
 CREATE TABLE RawDataXml.Badges (
     SiteId UNIQUEIDENTIFIER PRIMARY KEY,
     ApiSiteParameter NVARCHAR(256) NOT NULL,
-    RawData XML,
+    RawDataXml XML NULL,
+    XmlDataSize BIGINT NULL,
+    Inserted DATETIME2 DEFAULT GETDATE(),
+    CONSTRAINT fk_Badges_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
+);
+GO
+
+-- Delete table if it exists already
+IF OBJECT_ID('CleanData.Badges') IS NOT NULL
+    DROP TABLE CleanData.Badges;
+GO
+-- Create the table
+CREATE TABLE CleanData.Badges (
+    SiteId UNIQUEIDENTIFIER PRIMARY KEY,
+    ApiSiteParameter NVARCHAR(256) NOT NULL,
+    RowId INT,
+    UserId INT,
+    Name NVARCHAR(256),
+    [Date] DATETIME2,
+    Class INT,
+    TagBased BIT,
     Inserted DATETIME2 DEFAULT GETDATE(),
     CONSTRAINT fk_Badges_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
 );
@@ -33,5 +53,4 @@ SELECT
 FROM sys.schemas AS s
 JOIN sys.tables AS t ON s.schema_id = t.schema_id
 JOIN sys.columns AS c ON t.object_id = c.object_id
-WHERE s.name = 'RawDataXml'
 AND t.name = 'Badges'
