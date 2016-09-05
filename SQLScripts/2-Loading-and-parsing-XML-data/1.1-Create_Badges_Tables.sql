@@ -16,10 +16,9 @@ IF OBJECT_ID('RawDataXml.Badges') IS NOT NULL
 GO
 -- Create the table
 CREATE TABLE RawDataXml.Badges (
-    SiteId UNIQUEIDENTIFIER PRIMARY KEY,
+    SiteId UNIQUEIDENTIFIER,
     ApiSiteParameter NVARCHAR(256) NOT NULL,
     RawDataXml XML NULL,
-    XmlDataSize BIGINT NULL,
     Inserted DATETIME2 DEFAULT GETDATE(),
     CONSTRAINT fk_Badges_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
 );
