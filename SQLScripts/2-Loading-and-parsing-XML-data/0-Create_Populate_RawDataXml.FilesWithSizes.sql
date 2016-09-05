@@ -4855,7 +4855,7 @@ DELETE FROM RawDataXml.FilesWithSizes WHERE FilePath NOT LIKE '%.xml';
 -- Update the file path to that stored in Globals table:
 DECLARE @CorrectFilePath NVARCHAR(256) = (SELECT Value FROM RawDataXml.Globals WHERE Parameter = 'SourcePath');
 UPDATE RawDataXml.FilesWithSizes
-SET FilePath = REPLACE(FilePath, 'D:\Downloads\stackexchange', @CorrectFilePath);
+SET FilePath = REPLACE(FilePath, 'D:\Downloads\stackexchange\', @CorrectFilePath);
 -- Populate the other columns:
 UPDATE RawDataXml.FilesWithSizes
 SET DataType = CASE
@@ -4869,10 +4869,10 @@ SET DataType = CASE
     WHEN FilePath LIKE '%Votes.xml' THEN 'Votes'
     END;
 UPDATE RawDataXml.FilesWithSizes
-SET SiteDirectory = REPLACE(REPLACE(FilePath, @CorrectFilePath, ''), '' + DataType + '.xml', '')
+SET SiteDirectory = REPLACE(REPLACE(FilePath, @CorrectFilePath, ''), '\' + DataType + '.xml', '')
 UPDATE raw
-    SET SiteId = clean.Id,
-        ApiSiteParameter = clean.ApiSiteParameter
+    SET raw.SiteId = clean.Id,
+        raw.ApiSiteParameter = clean.ApiSiteParameter
 FROM RawDataXml.FilesWithSizes AS raw
 JOIN CleanData.Sites AS clean ON raw.SiteDirectory = clean.SiteDirectory
 GO

@@ -4,12 +4,12 @@ The following sections will cover the steps to take to load and parse each of th
 
 The sections are as follows:
 
-0. Global Parameters Setup
+0. Global Parameters & FilesWithSizes Setup
 1. Badges
 2. Comments
-3. PostHistory _(including split files for Stack Overflow data)_
+3. PostHistory
 4. PostLinks
-5. Posts _(including split files for Stack Overflow data)_
+5. Posts
 6. Tags
 7. Users
 8. Votes
@@ -18,7 +18,7 @@ __IMPORTANT NOTES:__
 
 - If you used a database name other than `SE` in step __1.1__ of _1-Preparing-the-database_, you will need to edit each script at the top to replace `USE SE` to `USE YourDatabaseName`.
 
-##0. Global Parameters Setup
+##0. Global Parameters & FilesWithSizes Setup
 
 ###0-Create_Populate_Globals_Table.sql
 
@@ -32,7 +32,12 @@ Instructions
 4. Verify the displayed results
 5. If incorrect values are present, repeat steps 1-4.
 
-* __IMPORTANT NOTE:__ If you add 'stackoverflow.com' as a target site, be aware that loading the XML data for that site will take __much longer__ than for any other site. It will also require special handling for `Posts.xml` and `PostHistory.xml` due to the files being too large for SQL to handle the whole file. See section __2.3 Split very large XML files__ of the README in the root folder of this repository.
+###0-Create_Populate_RawDataXml.FilesWithSizes.sql
+
+This SQL query has been generated using the `Python3_Generate_RawDataXml_FilesWithSizes_query.py` code located in the [PythonScripts](https://github.com/Phrancis/StackExchangeDataToMicrosoftSQLServer/tree/master/PythonScripts) directory. You may generate your own, or use the provided SQL query which is up-to-date as of the June 13 2016 dump. 
+
+This query will load a list of all possible file paths, fize sizes, and the number of files that they will need to be split into to fit within 20 MB per row XML file size.
+
 
 ##1. Badges
 
