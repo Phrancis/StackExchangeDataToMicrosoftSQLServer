@@ -10,7 +10,8 @@ CREATE TABLE RawDataXml.XmlProcessingQueue (
     DataType NVARCHAR(256),
     SiteDirectory NVARCHAR(256),
     FilePath NVARCHAR(512),
-    Processed BIT DEFAULT 0
+    Processed BIT DEFAULT 0,
+    CONSTRAINT fk_XmlProcessingQueue_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
 );
 DECLARE
     @RootDirectory NVARCHAR(256),
@@ -87,3 +88,16 @@ SET SiteId = '00000000-0000-0000-0000-000000000001', ApiSiteParameter = 'meta.ar
 WHERE FilePath LIKE '%stackexchange\meta.arabic.stackexchange.com%'
 
 SELECT * FROM RawDataXml.XmlProcessingQueue ORDER BY ApiSiteParameter
+
+IF OBJECT_ID('RawDataXml.XmlProcessingLog') IS NOT NULL
+DROP TABLE RawDataXml.XmlProcessingLog;
+GO
+CREATE TABLE RawDataXml.XmlProcessingLog (
+    SiteId UNIQUEIDENTIFIER,
+    ApiSiteParameter NVARCHAR(256),
+    SiteDirectory NVARCHAR(256),
+    FilePath NVARCHAR(512),
+    ProcessingTimeMs BIGINT NULL,
+    Processed DATETIME2 NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT fk_XmlProcessingLog_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
+);

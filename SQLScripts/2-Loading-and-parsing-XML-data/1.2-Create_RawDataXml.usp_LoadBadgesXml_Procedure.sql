@@ -12,6 +12,7 @@ GO
 
 CREATE PROCEDURE RawDataXml.usp_LoadBadgesXml
     @SiteDirectory NVARCHAR(256),
+    @FullFilePath NVARCHAR(512),
     -- Delete the loaded XML file after processing if True/1 (default True):
     @DeleteXmlRawDataAfterProcessing BIT = 1,
     -- Display/Return results to caller if @ReturnRows is set to True (default False)
@@ -21,10 +22,6 @@ BEGIN
     SET NOCOUNT ON;
     -- Fetch global source path parameter:
     DECLARE @SourcePath NVARCHAR(256);
-    DECLARE @bslash CHAR = CHAR(92);
-    SET @SourcePath = (SELECT Value FROM RawDataXml.Globals WHERE Parameter = 'SourcePath');
-    -- Make sure path ends with backslash (ASCII char 92)
-    IF(SELECT RIGHT(@SourcePath, 1)) <> @bslash SET @SourcePath += @bslash;
 
     -- Fetch site identifiers based on @SiteDirectory parameter:
     DECLARE @SiteId UNIQUEIDENTIFIER;
@@ -42,10 +39,6 @@ BEGIN
         RAISERROR(@ErrMsg, 11, 1);
     END 
 
-    -- Delete any previous XML data that may be present for the site:
-    DELETE FROM RawDataXml.Badges
-    WHERE SiteId = @SiteId;
-
     /** XML FILE HANDLING **
     This section loads the XML file from the file system into a table.
     If @DeleteXmlRawDataAfterProcessing is set to 1 (default)
@@ -53,18 +46,19 @@ BEGIN
     after the data is parsed into a relational table (below). 
     *****/
 
-    DECLARE @FilePath NVARCHAR(512) = @SourcePath + @SiteDirectory + @bslash + 'Badges.xml';
     DECLARE @SQL_OPENROWSET_QUERY NVARCHAR(1024);
 
     -- Dynamic SQL is used here because OPENROWSET will only accept a string literal as argument for the file path.
     SET @SQL_OPENROWSET_QUERY = 
-        'INSERT INTO RawDataXml.Badges (SiteId, ApiSiteParameter, RawDataXml)' + CHAR(10)
+        'INSERT INTO RawDataXml.XmlFiles (SiteId, ApiSiteParameter, DataType, RawDataXml, SourceFilePath)' + CHAR(10)
         + 'SELECT ' + QUOTENAME(@SiteId, '''') + ', ' + CHAR(10)
         + QUOTENAME(@ApiSiteParameter, '''') + ', ' + CHAR(10)
-        + 'CONVERT(XML, BulkColumn) AS BulkColumn' + CHAR(10)
-        + 'FROM OPENROWSET(BULK ' + QUOTENAME(@FilePath, '''') + ', SINGLE_BLOB) AS x;'
+        + '''Badges'', ' + CHAR(10)
+        + 'CONVERT(XML, BulkColumn) AS BulkColumn, ' + CHAR(10)
+        + QUOTENAME(@FullFilePath, '''') + CHAR(10)
+        + 'FROM OPENROWSET(BULK ' + QUOTENAME(@FullFilePath, '''') + ', SINGLE_BLOB) AS x;'
 
-    PRINT CONVERT(NVARCHAR(256), GETDATE(), 21) + ' Processing ' + @FilePath;
+    PRINT CONVERT(NVARCHAR(256), GETDATE(), 21) + ' Processing: ' + @FullFilePath;
 
     -- Execute the dynamic query to load XML into the table:
     EXECUTE sp_executesql @SQL_OPENROWSET_QUERY;
@@ -75,15 +69,11 @@ BEGIN
     and ensure a "fresh" set of data.
     *****/
 
-    -- Clear any existing data:
-    DELETE FROM CleanData.Badges
-    WHERE SiteId = @SiteId;
-
     -- Prepare XML document for parsing:
     DECLARE @XML AS XML;
     DECLARE @Doc AS INT;
     SELECT @XML = RawDataXml
-    FROM RawDataXml.Badges
+    FROM RawDataXml.XmlFiles
     WHERE SiteId = @SiteId;
     EXEC sp_xml_preparedocument @Doc OUTPUT, @XML;
 
@@ -125,7 +115,7 @@ BEGIN
     -- Delete the loaded XML file after processing if True/1 (default True):
     IF @DeleteXmlRawDataAfterProcessing = 1
     BEGIN
-        DELETE FROM RawDataXml.Badges
+        DELETE FROM RawDataXml.XmlFiles
         WHERE SiteId = @SiteId;
     END
 

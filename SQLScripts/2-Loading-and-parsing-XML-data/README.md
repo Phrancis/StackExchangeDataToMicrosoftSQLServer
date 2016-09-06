@@ -52,6 +52,10 @@ Instructions:
 2. Verify the displayed results. 
 3. If incorrect values are present, return to 0.2 and make corrections there first; then, run this again and the data should be corrected.
 
+###0.4-Create_RawDataXml.XmlFiles_Table.sql
+
+This will create the table that will temporarily hold XML files until they are parsed into relational table. It will be used by all the procedures/routines for loading and parsing XML files.
+
 ##1. Badges
 
 Badges are awarded to users when they complete a certain activity or reach a certain milestone. The conditions vary for each Stack Exchange site. Click the __Badges__ link at the top of any Stack Exchange site for specific details.

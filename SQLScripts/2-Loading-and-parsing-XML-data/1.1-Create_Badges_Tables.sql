@@ -11,20 +11,6 @@ USE SE
 GO
 
 -- Delete table if it exists already
-IF OBJECT_ID('RawDataXml.Badges') IS NOT NULL
-    DROP TABLE RawDataXml.Badges;
-GO
--- Create the table
-CREATE TABLE RawDataXml.Badges (
-    SiteId UNIQUEIDENTIFIER,
-    ApiSiteParameter NVARCHAR(256) NOT NULL,
-    RawDataXml XML NULL,
-    Inserted DATETIME2 DEFAULT GETDATE(),
-    CONSTRAINT fk_Badges_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
-);
-GO
-
--- Delete table if it exists already
 IF OBJECT_ID('CleanData.Badges') IS NOT NULL
     DROP TABLE CleanData.Badges;
 GO
