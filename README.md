@@ -35,11 +35,15 @@ After step __1.1 Download the data dump__ is completed, extract the contents of 
 
 Once the files are extracted, you may delete the downloaded archive file, at your discretion. The directory will now contain a large number (300+) of `.7z` zip files. These can be un-zipped by most zip clients (WinZip, WinRAR, 7-Zip, etc.). Note that the author of this repository used [7-Zip](http://www.7-zip.org/download.html), and the batch script provided below may not work with other clients.
 
-##2.2 Unarchive the zip files
+##2.2 Only keep sites you are interested in
+
+At this time, it is recommended that you take some time to go through the list of zip files and delete those you are not interested in. This will make the rest of the entireprocess much more efficient. Note that if you do want to load data from _all sites_, you can, however please note that this will take a considerable amount of time, as well as disk space on your PC as well as the SQL Server database.
+
+##2.3 Unarchive the zip files
 
 Each of the zip files contain a number of XML data files representing the different types of data included (more on that later). Each zip file must be extracted into a directory of the same name. This is extremely tedious to do manually, thus below are some scripts to make it easier if you wish to extract multiple sites' data.
 
-###2.2.a Using Windows operating system
+###2.3.a Using Windows operating system
 
 You may use the following batch file (Windows only) to create folders and process all the files automatically.
 
@@ -68,13 +72,13 @@ Save it locally with an extension of `.cmd`, for example, `C:\Scripts\BatchUnzip
 
 <img src="https://i.imgur.com/M3DJBjG.png" />
 
-###2.2.b Using *NIX operating system
+###2.3.b Using *NIX operating system
 
 _To be added later._
 
-##2.3 Processing and verifying
+##2.3 Unzipping and verifying
 
-The script will begin processing all of the files one by one. The entire process will likely take 2-3 hours to complete. Once it is completed, your directory should look like this:
+The script will begin unzipping all of the files one by one. The entire process will likely take 2-3 hours to complete. Once it is completed, your directory should look like this:
 
 <img src="https://i.imgur.com/ABfVyry.png" />
 
@@ -89,9 +93,7 @@ There is an additional, manual step that needs to be performed in order for Stac
 
 <img src="https://i.imgur.com/lgXfHrf.png" />
 
-##2.3 Split very large XML files
-
-__IMPORTANT: These steps are only needed if data from very large sites (i.e., Stack Overflow) is to be loaded into your database. If you do not plan on loading this data, you may skip this step entirely.__
+#3 Split very large XML files
 
 SQL Server Express _technically_ has a maximum XML field size of 2 GB each. In reality, SQL Server Express, as tested by the author, has a lot of difficulty with files larger than about ~20 MB. 
 
