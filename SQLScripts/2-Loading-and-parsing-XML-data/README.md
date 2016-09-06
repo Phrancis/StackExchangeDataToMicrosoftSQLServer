@@ -4,7 +4,7 @@ The following sections will cover the steps to take to load and parse each of th
 
 The sections are as follows:
 
-0. Global Parameters & FilesWithSizes Setup
+0. General Setup
 1. Badges
 2. Comments
 3. PostHistory
@@ -18,9 +18,9 @@ __IMPORTANT NOTES:__
 
 - If you used a database name other than `SE` in step __1.1__ of _1-Preparing-the-database_, you will need to edit each script at the top to replace `USE SE` to `USE YourDatabaseName`.
 
-##0. Global Parameters & FilesWithSizes Setup
+##0. General Setup
 
-###0-Create_Populate_Globals_Table.sql
+###0.1-Create_Populate_Globals_Table.sql
 
 This script will create a table to contain values which will be used globally while loading and processing data. 
 
@@ -32,12 +32,25 @@ Instructions
 4. Verify the displayed results
 5. If incorrect values are present, repeat steps 1-4.
 
-###0-Create_Populate_RawDataXml.FilesWithSizes.sql
+###0.2-Create_Populate_RawDataXml.FilesWithSizes.sql
 
 This SQL query has been generated using the `Python3_Generate_RawDataXml_FilesWithSizes_query.py` code located in the [PythonScripts](https://github.com/Phrancis/StackExchangeDataToMicrosoftSQLServer/tree/master/PythonScripts) directory. You may generate your own, or use the provided SQL query which is up-to-date as of the June 13 2016 dump. 
 
 This query will load a list of all possible file paths, fize sizes, and the number of files that they will need to be split into to fit within 20 MB per row XML file size.
 
+Instructions:
+1. If using the pre-generated SQL query, simply run the script as-is.
+2. If using the Python script to generate your query, copy the console output from Python and paste into a SQL query using your database, then run it as-is.
+3. In either case, the SQL script will display the finished table after running. Verify for accuracy.
+
+###0.3-Create_Populate_RawDataXml.XmlProcessingQueue
+
+This query will create a table to act as a processing queue to use to load large numbers of XML files, for example loading the entire data dump, or data from a very large site like Stack Overflow which spans several thousands of small ~20 MB XML files after splitting. Note that this step is dependent upon the data created in __0.2-Create_Populate_RawDataXml.FilesWithSizes.sql__.
+
+Instructions:
+1. Run the query as-is.
+2. Verify the displayed results. 
+3. If incorrect values are present, return to 0.2 and make corrections there first; then, run this again and the data should be corrected.
 
 ##1. Badges
 

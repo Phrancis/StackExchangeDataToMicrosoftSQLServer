@@ -95,6 +95,6 @@ __IMPORTANT: These steps are only needed if data from very large sites (i.e., St
 
 SQL Server Express _technically_ has a maximum XML field size of 2 GB each. In reality, SQL Server Express, as tested by the author, has a lot of difficulty with files larger than about ~20 MB. 
 
-Thus, in the [PythonScripts](https://github.com/Phrancis/StackExchangeDataToMicrosoftSQLServer/tree/master/PythonScripts) section you will find some code you can run on your own root directory to split up any files >20MB into smaller bites. Note that this is provided for your convenience and you are responsible for inspecting, editing and using the script (or not). 
+Thus, in the [PythonScripts](https://github.com/Phrancis/StackExchangeDataToMicrosoftSQLServer/tree/master/PythonScripts) section you will find some code in a file called ` 	Python3_SplitAllLargeXmlFiles.py` that you can run on your own root directory to split up any files >20MB into smaller bites. Note that this is provided for your convenience and you are responsible for inspecting, editing and using the script (or not). 
 
 Note that running the Python script requires [Python 3.5](https://www.python.org/downloads/) or greater, although it could probably be fairly easily modified to work on Python 2.7. Running the script on the entirety of the data dump subdirectories took around 4 hours in total on the author's machine. 
