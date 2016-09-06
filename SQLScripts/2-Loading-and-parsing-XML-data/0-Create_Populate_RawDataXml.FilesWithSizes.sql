@@ -4876,4 +4876,10 @@ UPDATE raw
 FROM RawDataXml.FilesWithSizes AS raw
 JOIN CleanData.Sites AS clean ON raw.SiteDirectory = clean.SiteDirectory
 GO
-SELECT * FROM RawDataXml.FilesWithSizes
+
+SELECT * FROM RawDataXml.FilesWithSizes 
+/*
+SELECT * FROM CleanData.Sites
+WHERE SiteUrl LIKE '%arabic%'
+ ORDER BY SiteDirectory
+ */
