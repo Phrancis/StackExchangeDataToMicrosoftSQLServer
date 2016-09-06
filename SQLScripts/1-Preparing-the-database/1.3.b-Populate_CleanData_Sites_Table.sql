@@ -51,6 +51,11 @@ GO
 UPDATE CleanData.Sites
 SET SiteDirectory = REPLACE(SiteUrl, 'http://', '')
 WHERE SiteUrl IS NOT NULL AND SiteUrl <> '';
+-- The Arabic Language site didn't have enough activity during the beta and has been closed, thus does not have a SiteId
+INSERT INTO CleanData.Sites(Id, ApiSiteParameter, Name, SiteState, SiteUrl, SiteDirectory, Inserted)
+VALUES
+('00000000-0000-0000-0000-000000000000', 'arabic', 'Arabic Language', 'closed_beta', 'http://arabic.stackexchange.com', 'arabic.stackexchange.com', GETDATE()),
+('00000000-0000-0000-0000-000000000001', 'meta.arabic', 'Arabic Language Meta', 'linked_meta', 'http://meta.arabic.stackexchange.com', 'meta.arabic.stackexchange.com', GETDATE());
 
 -- DISPLAY THE INSERTED DATA IN THE CLIENT:
 SELECT * FROM CleanData.Sites;
