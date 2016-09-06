@@ -10,6 +10,10 @@ from typing import List
 # Edit this value to be your actual SE data dump root directory:
 ROOT_DIRECTORY = 'D:\Downloads\stackexchange'
 
+# Set this to False if you want to still keep the source XML files after split (takes up more space and XML files need deleted later)
+# Set this to True if you want to delete source XML files automatically after split (more risky but takes less space)
+DELETE_SOURCE_XML_AFTER_SPLIT = False
+
 SIZE_LIMIT = 20000000 # 20 MB
 
 # Clock to measure how long the script takes to execute
@@ -77,6 +81,9 @@ for elem in large_files:
 
             # move on to the next output file
             current_file_num += 1
+
+    if DELETE_SOURCE_XML_AFTER_SPLIT == True:
+        os.remove(input_file)
 
     # Print results
     print('Path:', full_file_path)
