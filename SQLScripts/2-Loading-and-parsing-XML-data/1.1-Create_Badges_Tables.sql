@@ -3,7 +3,7 @@
 
 1. Change database name if needed
 2. Execute script
-3. Tables will be shown after completion
+3. Table will be shown after completion
 */
 
 -- Change database name if needed:
@@ -28,6 +28,10 @@ CREATE TABLE CleanData.Badges (
     CONSTRAINT fk_Badges_SiteId FOREIGN KEY (SiteId) REFERENCES CleanData.Sites(Id)
 );
 GO
+CREATE CLUSTERED INDEX ix_Badges_ApiSiteParameter ON CleanData.Badges(ApiSiteParameter ASC);
+CREATE NONCLUSTERED INDEX ix_Badges_SiteId ON CleanData.Badges(SiteId);
+CREATE NONCLUSTERED INDEX ix_Badges_CreationDate ON CleanData.Badges(CreationDate ASC);
+--CREATE INDEX ix_CleanData_Badges ON CleanData.Badges (ApiSiteParameter ASC, UserId ASC, Inserted ASC);
 
 -- Verification
 SELECT 
