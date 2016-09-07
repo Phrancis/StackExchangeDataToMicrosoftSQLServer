@@ -31,7 +31,6 @@ GO
 CREATE CLUSTERED INDEX ix_Badges_ApiSiteParameter ON CleanData.Badges(ApiSiteParameter ASC);
 CREATE NONCLUSTERED INDEX ix_Badges_SiteId ON CleanData.Badges(SiteId);
 CREATE NONCLUSTERED INDEX ix_Badges_CreationDate ON CleanData.Badges(CreationDate ASC);
---CREATE INDEX ix_CleanData_Badges ON CleanData.Badges (ApiSiteParameter ASC, UserId ASC, Inserted ASC);
 
 -- Verification
 SELECT 

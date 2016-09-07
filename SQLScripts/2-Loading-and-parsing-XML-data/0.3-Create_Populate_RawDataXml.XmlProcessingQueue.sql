@@ -66,18 +66,14 @@ CLOSE _SplitFileSites;
 DEALLOCATE _SplitFileSites;
 
 -- avp.SE became video.SE
-UPDATE RawDataXml.XmlProcessingQueue
-SET SiteId = 'FD97F1EA-6DFF-E511-80C0-00155D918203', ApiSiteParameter = 'video'
+DELETE FROM RawDataXml.XmlProcessingQueue
 WHERE FilePath LIKE '%stackexchange\avp.stackexchange.com%'
-UPDATE RawDataXml.XmlProcessingQueue
-SET SiteId = 'FF97F1EA-6DFF-E511-80C0-00155D918203', ApiSiteParameter = 'meta.video'
+DELETE FROM RawDataXml.XmlProcessingQueue
 WHERE FilePath LIKE '%stackexchange\meta.avp.stackexchange.com%'
 -- moderators.SE became communitybuilding.SE
-UPDATE RawDataXml.XmlProcessingQueue
-SET SiteId = 'AA04380F-6EFF-E511-80C0-00155D918203', ApiSiteParameter = 'communitybuilding'
+DELETE FROM RawDataXml.XmlProcessingQueue
 WHERE FilePath LIKE '%stackexchange\moderators.stackexchange.com%'
-UPDATE RawDataXml.XmlProcessingQueue
-SET SiteId = 'AC04380F-6EFF-E511-80C0-00155D918203', ApiSiteParameter = 'meta.communitybuilding'
+DELETE FROM RawDataXml.XmlProcessingQueue
 WHERE FilePath LIKE '%stackexchange\meta.moderators.stackexchange.com%'
 -- The Arabic Language site didn't have enough activity during the beta and has been closed, thus does not have a SiteId
 UPDATE RawDataXml.XmlProcessingQueue

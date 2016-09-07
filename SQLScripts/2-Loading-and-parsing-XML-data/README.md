@@ -96,7 +96,7 @@ Instructions
 
 ###1.4-XmlProcessingQueue_Execute_RawXmlData.usp_LoadBadgesXml_Procedure
 
-Use this script if you need to load and process batches of Badges XML files in a row. This makes use of the `RawDataXml.XmlProcessingQueue` created in step 0.3.
+Use this script if you need to load and process batches of Badges XML files in a row. This is most useful if you are working on loading data from multiple sites. This makes use of the `RawDataXml.XmlProcessingQueue` created in step 0.3.
 
 Instructions
 

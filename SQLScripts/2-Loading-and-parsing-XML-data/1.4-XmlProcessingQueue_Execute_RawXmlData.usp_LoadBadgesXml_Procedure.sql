@@ -1,3 +1,28 @@
+SET NOCOUNT ON;
+
+-- Edit this to the number of Badges XML rows (i.e. files) you want to process:
+DECLARE @NumRowsToProcess INT = 427;
+
+-- Run the script
+-- NOTE THAT THIS SCRIPT CAN TAKE VERY LONG TO PROCESS FOR LARGE NUMBERS OF FILES.
+DECLARE @TotalRows INT = (SELECT COUNT(*) FROM RawDataXml.XmlProcessingQueue WHERE DataType = 'Badges' AND Processed = 0);
+IF @NumRowsToProcess > @TotalRows SET @NumRowsToProcess = @TotalRows;
+
+IF OBJECT_ID('tempdb..#RowsToProcess') IS NOT NULL
+DROP TABLE #RowsToProcess;
+
+CREATE TABLE #RowsToProcess (RowNum INT);
+
+DECLARE @SQL NVARCHAR(MAX) = 
+'INSERT INTO #RowsToProcess(RowNum) 
+SELECT TOP ' + CAST(@NumRowsToProcess AS VARCHAR(10)) + ' RowNum 
+FROM RawDataXml.XmlProcessingQueue 
+WHERE DataType = ''Badges''
+    AND Processed = 0
+    ORDER BY RowNum ASC;'
+
+EXECUTE sp_executesql @SQL;
+
 DECLARE @StartTime DATETIME2 = GETDATE()
 
 DECLARE 
@@ -7,13 +32,12 @@ DECLARE
     @Now DATETIME2;
 
 DECLARE _BadgesXmlProcessing CURSOR FOR
-    SELECT TOP 100
+    SELECT
         RowNum, 
         SiteDirectory, 
         FilePath 
     FROM RawDataXml.XmlProcessingQueue
-    WHERE DataType = 'Badges'
-    AND Processed = 0
+    WHERE RowNum IN (SELECT RowNum FROM #RowsToProcess)
     ORDER BY RowNum ASC;
 
 OPEN _BadgesXmlProcessing;
@@ -41,9 +65,14 @@ END
 CLOSE _BadgesXmlProcessing;
 DEALLOCATE _BadgesXmlProcessing;
 
+
+
 --verify
 SELECT DATEDIFF(SECOND, @StartTime, GETDATE()) AS [ProcessingTimeSeconds]
-SELECT * FROM RawDataXml.XmlProcessingLog
-SELECT * FROM CleanData.Badges ORDER BY ApiSiteParameter ASC, CreationDate ASC
+
+SET NOCOUNT OFF;
+
+SELECT * FROM RawDataXml.XmlProcessingLog ORDER BY Processed ASC
+--SELECT * FROM CleanData.Badges ORDER BY ApiSiteParameter ASC, CreationDate ASC
 SELECT COUNT(*) AS [BadgesXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue WHERE DataType = 'Badges' AND Processed = 0;
