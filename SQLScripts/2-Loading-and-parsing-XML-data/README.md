@@ -54,7 +54,9 @@ Instructions:
 
 ###0.4-Create_RawDataXml.XmlFiles_Table.sql
 
-This will create the table that will temporarily hold XML files until they are parsed into relational table. It will be used by all the procedures/routines for loading and parsing XML files.
+This will create the table that will temporarily hold XML files until they are parsed into relational table. It will be used by all the procedures/routines for loading and parsing XML files. 
+
+Optimally, the XML files should be deleted from this table once they have been parsed into "normal" relational data tables, and the stored procedures used to parse data to account for that, although at your option you may also keep them by specifying so when calling the procedures (more on that soon).
 
 ##1. Badges
 
@@ -62,28 +64,42 @@ Badges are awarded to users when they complete a certain activity or reach a cer
 
 If you wish to load Badges data into the database, perform the following steps.
 
-###1.1-Create__Badges_Tables.sql
+###1.1-Create_Badges_Tables.sql
 
+This table will store the data gathered from parsing the Badges XML files. 
+
+Instructions:
 1. Change database name if needed
 2. Execute script
 3. Table data will be shown after completion
 
-###1.2-Load_RawDataXml_Badges.sql
+###1.2-Create_RawDataXml.usp_LoadBadgesXml_Procedure.sql
 
-This script will fetch the XML file(s) from your computer's file system and load them into the database with the appropriate site-identifying keys.
+This script creates a stored procedure which, upon calling in the next steps, will fetch the XML file(s) from your computer's file system, and load and parse them into the database with the appropriate site-identifying keys.
 
 Instructions
 
 1. Run script as-is
-2. Verify the output data
-3. If output data is incorrect, verify the parameter values in `RawDataXml.Globals` and the contents of each target folder to confirm a `Badges.xml` file exists.
 
-###1.3-Parse_RawDataXml_Badges_To_CleanData.sql
+###1.3-Execute_RawXmlData.usp_LoadBadgesXml_Procedure.sql
 
-This script will parse the raw XML data and organize it into the `CleanData.Badges` table. It will provide the option of deleting the data in `RawDataXml.Badges` after finishing to free up storage space in the database.
+This script will parse the raw XML data from __a single file__ and organize it into the `CleanData.Badges` table. It will provide the option of deleting the data in `RawDataXml.Badges` after finishing to free up storage space in the database.
+
+To process XML files in batches, see section 1.4 to use the `RawDataXml.XmlProcessingQueue` instead.
 
 Instructions
 
-1. Set `@DeleteXmlRawDataAfterProcessing` to `0` (false/no) or `1` (true/yes). If set to `1`, you will have to reprocess the script `1.2-Load_RawDataXml_Badges.sql` prior to executing this script again.
-2. Execute the script (execution may take several minutes depending on the amount of XML data to process)
-3. Verify the displayed results, which will be displayed from newest to oldest Badge awarded date (i.e.: `CreationDate` column)
+1. Set `@SiteDirectory` and `@FileName` to match the Badges XML file you want to load into the database
+2. Edit the `@DeleteXmlRawDataAfterProcessing` and `@ReturnRows` to the desired values
+3. Run the script (execution may take a few minutes)
+4. Repeat for any other file you want to load individually
+
+###1.4-XmlProcessingQueue_Execute_RawXmlData.usp_LoadBadgesXml_Procedure
+
+Use this script if you need to load and process batches of Badges XML files in a row. This makes use of the `RawDataXml.XmlProcessingQueue` created in step 0.3.
+
+Instructions
+
+1. Edit `@NumRowsToProcess` to the number of Badges XML rows (i.e. files) you want to process
+2. Run the script. Note that this script can take very long (up to several hours) to process for large numbers of files
+3. 
