@@ -72,7 +72,7 @@ SELECT DATEDIFF(SECOND, @StartTime, GETDATE()) AS [ProcessingTimeSeconds]
 
 SET NOCOUNT OFF;
 
-SELECT * FROM RawDataXml.XmlProcessingLog ORDER BY Processed ASC
---SELECT * FROM CleanData.Badges ORDER BY ApiSiteParameter ASC, CreationDate ASC
+SELECT * FROM RawDataXml.XmlProcessingLog WHERE FilePath like '%Badges%' ORDER BY Processed ASC
+-- SELECT * FROM CleanData.Badges WHERE ApiSiteParameter = '3dprinting'
 SELECT COUNT(*) AS [BadgesXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue WHERE DataType = 'Badges' AND Processed = 0;

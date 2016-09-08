@@ -22,8 +22,7 @@ DECLARE @SourcePath NVARCHAR(256) = (SELECT Value FROM RawDataXml.Globals WHERE 
 DECLARE @FullFilePath NVARCHAR(512) = @SourcePath + @SiteDirectory + '\' + @FileName
 
 DECLARE @Start DATETIME2 = GETDATE();
-PRINT 'Processing:' + @FullFilePath;
 
-EXECUTE RawDataXml.usp_LoadBadgesXml @SiteDirectory, @FullFilePath;
+EXECUTE RawDataXml.usp_LoadCommentsXml @SiteDirectory, @FullFilePath, @DeleteXmlRawDataAfterProcessing, @ReturnRows
 
-PRINT 'Processing time: ' + CAST(DATEDIFF(MILLISECOND, @StartTime, GETDATE()) AS NVARCHAR(256));
+PRINT 'Processing time: ' + CAST(DATEDIFF(MILLISECOND, @Start, GETDATE()) AS NVARCHAR(256)) + ' ms.';
