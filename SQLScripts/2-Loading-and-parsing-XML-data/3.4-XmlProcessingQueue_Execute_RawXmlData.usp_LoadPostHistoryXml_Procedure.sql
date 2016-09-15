@@ -4,14 +4,14 @@ SET NOCOUNT ON;
 GO
 
 -- Edit this to the number of Comments XML rows (i.e. files) you want to process:
-DECLARE @NumRowsToProcess INT = 10;
+DECLARE @NumRowsToProcess INT = 100;
 
 -- Run the script
 -- NOTE THAT THIS SCRIPT CAN TAKE VERY LONG TO PROCESS FOR LARGE NUMBERS OF FILES.
 DECLARE @TotalRows INT = (
     SELECT COUNT(*) 
     FROM RawDataXml.XmlProcessingQueue AS q
-    WHERE q.DataType = 'Comments' 
+    WHERE q.DataType = 'PostHistory' 
     AND q.Processed = 0
     AND q.SiteDirectory IN (
         SELECT Value
@@ -27,13 +27,14 @@ DROP TABLE #RowsToProcess;
 CREATE TABLE #RowsToProcess (RowNum INT);
 
 DECLARE @SQL NVARCHAR(MAX) = 
-'INSERT INTO #RowsToProcess(RowNum) 
-SELECT TOP ' + CAST(@NumRowsToProcess AS VARCHAR(10)) + ' RowNum 
+'INSERT INTO #RowsToProcess(RowNum, ApiSiteParameter)' +
+'SELECT TOP ' + CAST(@NumRowsToProcess AS VARCHAR(10)) + 
+' q.RowNum, q.ApiSiteParameter 
 FROM RawDataXml.XmlProcessingQueue AS q
 JOIN RawDataXml.Globals AS g
     ON g.Value = q.SiteDirectory
     AND g.Parameter = ''TargetSite''
-WHERE q.DataType = ''Comments''
+WHERE q.DataType = ''PostHistory''
     AND q.Processed = 0
     ORDER BY q.RowNum ASC;'
 
@@ -88,7 +89,7 @@ SET NOCOUNT OFF;
 
 SELECT * 
 FROM RawDataXml.XmlProcessingLog
-WHERE FilePath like '%Comments%' 
+WHERE FilePath like '%PostHistory%' 
 ORDER BY Processed ASC;
 
 SELECT * 
@@ -97,11 +98,10 @@ ORDER BY Inserted ASC;
 
 SELECT COUNT(*) AS [BadgesXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue AS q
-WHERE q.DataType = 'Comments' 
+WHERE q.DataType = 'PostHistory' 
 AND q.Processed = 0
 AND q.SiteDirectory IN (
     SELECT Value
     FROM RawDataXml.Globals
     WHERE Parameter = 'TargetSite'
 );
-
