@@ -99,7 +99,7 @@ BEGIN
         CreationDate,
         UserId,
         [Text]
-    FROM OPENXML(@Doc, 'comments/row')
+    FROM OPENXML(@Doc, 'posthistory/row')
     WITH (
         Id INT '@Id',
         PostHistoryTypeId INT '@PostHistoryTypeId',
