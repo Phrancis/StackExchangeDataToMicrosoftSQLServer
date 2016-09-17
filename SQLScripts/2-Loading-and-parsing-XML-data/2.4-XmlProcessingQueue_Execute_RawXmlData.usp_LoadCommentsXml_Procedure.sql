@@ -4,7 +4,7 @@ SET NOCOUNT ON;
 GO
 
 -- Edit this to the number of Comments XML rows (i.e. files) you want to process:
-DECLARE @NumRowsToProcess INT = 10;
+DECLARE @NumRowsToProcess INT = 100;
 
 -- Run the script
 -- NOTE THAT THIS SCRIPT CAN TAKE VERY LONG TO PROCESS FOR LARGE NUMBERS OF FILES.
@@ -95,7 +95,7 @@ SELECT *
 FROM CleanData.Badges 
 ORDER BY Inserted ASC;
 
-SELECT COUNT(*) AS [BadgesXmlLeftToProcess] 
+SELECT COUNT(*) AS [CommentsXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue AS q
 WHERE q.DataType = 'Comments' 
 AND q.Processed = 0

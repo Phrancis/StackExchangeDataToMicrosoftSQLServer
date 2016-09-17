@@ -11,7 +11,8 @@ SELECT
     [Category] = 'Badges',
     ApiSiteParameter,
     [Rows] = COUNT(*),
-    [Added] = CAST(MAX(Inserted) AS DATE)
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
 FROM CleanData.Badges
 GROUP BY ApiSiteParameter
 UNION ALL
@@ -19,6 +20,20 @@ SELECT
     [Category] = 'Comments',
     ApiSiteParameter,
     [Rows] = COUNT(*),
-    [Added] = CAST(MAX(Inserted) AS DATE)
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
 FROM CleanData.Comments
 GROUP BY ApiSiteParameter
+UNION ALL
+SELECT 
+    [Category] = 'PostHistory',
+    ApiSiteParameter,
+    [Rows] = COUNT(*),
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
+FROM CleanData.PostHistory
+GROUP BY ApiSiteParameter
+
+
+
+ORDER BY Category ASC, ApiSiteParameter ASC

@@ -3,7 +3,7 @@ GO
 SET NOCOUNT ON;
 GO
 
--- Edit this to the number of Comments XML rows (i.e. files) you want to process:
+-- Edit this to the number of PostHistory XML rows (i.e. files) you want to process:
 DECLARE @NumRowsToProcess INT = 100;
 
 -- Run the script
@@ -24,11 +24,12 @@ IF @NumRowsToProcess > @TotalRows SET @NumRowsToProcess = @TotalRows;
 IF OBJECT_ID('tempdb..#RowsToProcess') IS NOT NULL
 DROP TABLE #RowsToProcess;
 
-CREATE TABLE #RowsToProcess (RowNum INT);
+CREATE TABLE #RowsToProcess (RowNum INT, ApiSiteParameter NVARCHAR(256));
 
 DECLARE @SQL NVARCHAR(MAX) = 
 'INSERT INTO #RowsToProcess(RowNum, ApiSiteParameter)' +
-'SELECT TOP ' + CAST(@NumRowsToProcess AS VARCHAR(10)) + 
+'SELECT ' + 
+'TOP ' + CAST(@NumRowsToProcess AS VARCHAR(10)) + 
 ' q.RowNum, q.ApiSiteParameter 
 FROM RawDataXml.XmlProcessingQueue AS q
 JOIN RawDataXml.Globals AS g
@@ -48,7 +49,7 @@ DECLARE
     @FullFilePath NVARCHAR(512),
     @Now DATETIME2;
 
-DECLARE _CommentsXmlProcessing CURSOR FOR
+DECLARE _PostHistoryXmlProcessing CURSOR FOR
     SELECT
         RowNum, 
         SiteDirectory, 
@@ -57,14 +58,14 @@ DECLARE _CommentsXmlProcessing CURSOR FOR
     WHERE RowNum IN (SELECT RowNum FROM #RowsToProcess)
     ORDER BY RowNum ASC;
 
-OPEN _CommentsXmlProcessing;
+OPEN _PostHistoryXmlProcessing;
 
-FETCH NEXT FROM _CommentsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
+FETCH NEXT FROM _PostHistoryXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
     SET @Now = GETDATE();
-    EXECUTE RawDataXml.usp_LoadCommentsXml @SiteDirectory, @FullFilePath;
+    EXECUTE RawDataXml.usp_LoadPostHistoryXml @SiteDirectory, @FullFilePath;
 
     INSERT INTO RawDataXml.XmlProcessingLog
     SELECT SiteId, ApiSiteParameter, SiteDirectory, FilePath, 
@@ -76,11 +77,11 @@ BEGIN
     SET Processed = 1
     WHERE RowNum = @RowNum;
 
-    FETCH NEXT FROM _CommentsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
+    FETCH NEXT FROM _PostHistoryXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
 END
 
-CLOSE _CommentsXmlProcessing;
-DEALLOCATE _CommentsXmlProcessing;
+CLOSE _PostHistoryXmlProcessing;
+DEALLOCATE _PostHistoryXmlProcessing;
 
 SELECT DATEDIFF(SECOND, @StartTime, GETDATE()) AS [ProcessingTimeSeconds]
 
@@ -93,10 +94,10 @@ WHERE FilePath like '%PostHistory%'
 ORDER BY Processed ASC;
 
 SELECT * 
-FROM CleanData.Badges 
+FROM CleanData.PostHistory 
 ORDER BY Inserted ASC;
 
-SELECT COUNT(*) AS [BadgesXmlLeftToProcess] 
+SELECT COUNT(*) AS [PostHistoryXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue AS q
 WHERE q.DataType = 'PostHistory' 
 AND q.Processed = 0

@@ -2,10 +2,10 @@ USE SE
 GO
 
 -- Edit @SiteDirectory value to the directory of the site where the file is:
-DECLARE @SiteDirectory NVARCHAR(256) = '3dprinting.stackexchange.com'
+DECLARE @SiteDirectory NVARCHAR(256) = 'codereview.stackexchange.com'
 
 -- Edit @FileName value to the name of the actual file:
-DECLARE @FileName NVARCHAR(256) = 'PostHistory.xml'
+DECLARE @FileName NVARCHAR(256) = 'PostHistory1.xml'
 
 -- NOTE: For the following two variables, 1 = TRUE and 0 = FALSE
 
