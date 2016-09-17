@@ -35,9 +35,12 @@ CREATE TABLE CleanData.PostLinks (
     PostId INT,
     RelatedPostId INT,
     LinkTypeId TINYINT,
-    CONSTRAINT fk_PostLinks_PostLinkTypes FOREIGN KEY (LinkTypeId) REFERENCES CleanData.PostLinkTypes(Id)
+    Inserted DATETIME2 DEFAULT GETDATE(),
+    
 );
 GO
+ALTER TABLE CleanData.PostLinks 
+ADD CONSTRAINT fk_PostLinks_PostLinkTypes FOREIGN KEY (LinkTypeId) REFERENCES CleanData.PostLinkTypes(Id)
 CREATE NONCLUSTERED INDEX ix_PostLinks_PostId_RelatedPostId ON CleanData.PostLinks(PostId ASC, RelatedPostId ASC);
 CREATE NONCLUSTERED INDEX ix_PostLinks_ApiSiteParameter_SiteId ON CleanData.PostLinks(ApiSiteParameter ASC, SiteId);
 CREATE NONCLUSTERED INDEX ix_PostLinks_CreationDate ON CleanData.PostLinks(CreationDate ASC);
