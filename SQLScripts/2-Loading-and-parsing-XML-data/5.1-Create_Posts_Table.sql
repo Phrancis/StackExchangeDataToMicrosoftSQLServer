@@ -54,7 +54,7 @@ CREATE TABLE CleanData.Posts (
     CommentCount INT NULL,
     FavoriteCount INT NULL,
     ClosedDate DATETIME2 NULL,
-    CommunityOwnerDate DATETIME2 NULL
+    CommunityOwnedDate DATETIME2 NULL
 );
 ALTER TABLE CleanData.Posts ADD CONSTRAINT fk_Posts_PostTypes FOREIGN KEY (PostTypeId) REFERENCES CleanData.PostTypes(Id);
 CREATE NONCLUSTERED INDEX ix_Posts_CreationDate ON CleanData.Posts(CreationDate ASC);
