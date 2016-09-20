@@ -33,7 +33,23 @@ SELECT
     [LastAdded] = CAST(MAX(Inserted) AS DATE)
 FROM CleanData.PostHistory
 GROUP BY ApiSiteParameter
-
-
+UNION ALL
+SELECT 
+    [Category] = 'PostLinks',
+    ApiSiteParameter,
+    [Rows] = COUNT(*),
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
+FROM CleanData.PostLinks
+GROUP BY ApiSiteParameter
+UNION ALL
+SELECT 
+    [Category] = 'Posts',
+    ApiSiteParameter,
+    [Rows] = COUNT(*),
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
+FROM CleanData.Posts
+GROUP BY ApiSiteParameter
 
 ORDER BY Category ASC, ApiSiteParameter ASC
