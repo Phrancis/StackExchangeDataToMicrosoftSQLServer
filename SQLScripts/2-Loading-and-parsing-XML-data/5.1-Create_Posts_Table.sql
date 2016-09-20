@@ -35,7 +35,7 @@ GO
 CREATE TABLE CleanData.Posts (
     SiteId UNIQUEIDENTIFIER NOT NULL,
     ApiSiteParameter NVARCHAR(256) NOT NULL,
-    Id INT PRIMARY KEY,
+    Id INT NOT NULL,
     PostTypeId TINYINT NOT NULL,
     AcceptedAnswerId INT NULL,
     ParentId INT NULL,
@@ -58,6 +58,7 @@ CREATE TABLE CleanData.Posts (
     Inserted DATETIME2 DEFAULT GETDATE()
 );
 ALTER TABLE CleanData.Posts ADD CONSTRAINT fk_Posts_PostTypes FOREIGN KEY (PostTypeId) REFERENCES CleanData.PostTypes(Id);
+CREATE CLUSTERED INDEX ix_Posts_PostId ON CleanData.Posts(Id ASC);
 CREATE NONCLUSTERED INDEX ix_Posts_CreationDate ON CleanData.Posts(CreationDate ASC);
 CREATE NONCLUSTERED INDEX ix_Posts_OwnerUserId ON CleanData.Posts(OwnerUserId ASC);
 
