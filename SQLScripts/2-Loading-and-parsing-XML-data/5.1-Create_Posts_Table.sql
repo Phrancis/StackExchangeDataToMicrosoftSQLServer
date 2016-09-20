@@ -33,6 +33,8 @@ IF OBJECT_ID('CleanData.Posts') IS NOT NULL
     DROP TABLE CleanData.Posts;
 GO
 CREATE TABLE CleanData.Posts (
+    SiteId UNIQUEIDENTIFIER NOT NULL,
+    ApiSiteParameter NVARCHAR(256) NOT NULL,
     Id INT PRIMARY KEY,
     PostTypeId TINYINT NOT NULL,
     AcceptedAnswerId INT NULL,
