@@ -3,7 +3,7 @@ GO
 SET NOCOUNT ON;
 GO
 
--- Edit this to the number of Posts XML rows (i.e. files) you want to process:
+-- Edit this to the number of Tags XML rows (i.e. files) you want to process:
 DECLARE @NumRowsToProcess INT = 100;
 
 -- Run the script
@@ -11,7 +11,7 @@ DECLARE @NumRowsToProcess INT = 100;
 DECLARE @TotalRows INT = (
     SELECT COUNT(*) 
     FROM RawDataXml.XmlProcessingQueue AS q
-    WHERE q.DataType = 'Posts' 
+    WHERE q.DataType = 'Tags' 
     AND q.Processed = 0
     AND q.SiteDirectory IN (
         SELECT Value
@@ -35,7 +35,7 @@ FROM RawDataXml.XmlProcessingQueue AS q
 JOIN RawDataXml.Globals AS g
     ON g.Value = q.SiteDirectory
     AND g.Parameter = ''TargetSite''
-WHERE q.DataType = ''Posts''
+WHERE q.DataType = ''Tags''
     AND q.Processed = 0
     ORDER BY q.RowNum ASC;'
 
@@ -49,7 +49,7 @@ DECLARE
     @FullFilePath NVARCHAR(512),
     @Now DATETIME2;
 
-DECLARE _PostsXmlProcessing CURSOR FOR
+DECLARE _TagsXmlProcessing CURSOR FOR
     SELECT
         RowNum, 
         SiteDirectory, 
@@ -58,14 +58,14 @@ DECLARE _PostsXmlProcessing CURSOR FOR
     WHERE RowNum IN (SELECT RowNum FROM #RowsToProcess)
     ORDER BY RowNum ASC;
 
-OPEN _PostsXmlProcessing;
+OPEN _TagsXmlProcessing;
 
-FETCH NEXT FROM _PostsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
+FETCH NEXT FROM _TagsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
     SET @Now = GETDATE();
-    EXECUTE RawDataXml.usp_LoadPostsXml @SiteDirectory, @FullFilePath;
+    EXECUTE RawDataXml.usp_LoadTagsXml @SiteDirectory, @FullFilePath;
 
     INSERT INTO RawDataXml.XmlProcessingLog
     SELECT SiteId, ApiSiteParameter, SiteDirectory, FilePath, 
@@ -77,11 +77,11 @@ BEGIN
     SET Processed = 1
     WHERE RowNum = @RowNum;
 
-    FETCH NEXT FROM _PostsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
+    FETCH NEXT FROM _TagsXmlProcessing INTO @RowNum, @SiteDirectory, @FullFilePath;
 END
 
-CLOSE _PostsXmlProcessing;
-DEALLOCATE _PostsXmlProcessing;
+CLOSE _TagsXmlProcessing;
+DEALLOCATE _TagsXmlProcessing;
 
 SELECT DATEDIFF(SECOND, @StartTime, GETDATE()) AS [ProcessingTimeSeconds]
 
@@ -90,16 +90,16 @@ SET NOCOUNT OFF;
 
 SELECT * 
 FROM RawDataXml.XmlProcessingLog
-WHERE FilePath like '%Posts%' 
+WHERE FilePath like '%Tags%' 
 ORDER BY Processed ASC;
 
 SELECT * 
-FROM CleanData.Posts 
+FROM CleanData.Tags 
 ORDER BY Inserted ASC;
 
-SELECT COUNT(*) AS [PostsXmlLeftToProcess] 
+SELECT COUNT(*) AS [TagsXmlLeftToProcess] 
 FROM RawDataXml.XmlProcessingQueue AS q
-WHERE q.DataType = 'Posts' 
+WHERE q.DataType = 'Tags' 
 AND q.Processed = 0
 AND q.SiteDirectory IN (
     SELECT Value
