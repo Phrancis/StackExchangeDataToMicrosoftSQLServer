@@ -51,5 +51,23 @@ SELECT
     [LastAdded] = CAST(MAX(Inserted) AS DATE)
 FROM CleanData.Posts
 GROUP BY ApiSiteParameter
+UNION ALL
+SELECT 
+    [Category] = 'Tags',
+    ApiSiteParameter,
+    [Rows] = COUNT(*),
+    [EffectiveDate] = NULL,
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
+FROM CleanData.Tags
+GROUP BY ApiSiteParameter
+UNION ALL
+SELECT 
+    [Category] = 'Users',
+    ApiSiteParameter,
+    [Rows] = COUNT(*),
+    [EffectiveDate] = CAST(MAX(CreationDate) AS DATE),
+    [LastAdded] = CAST(MAX(Inserted) AS DATE)
+FROM CleanData.Users
+GROUP BY ApiSiteParameter
 
 ORDER BY Category ASC, ApiSiteParameter ASC
